@@ -4,6 +4,8 @@ from requests.adapters import HTTPAdapter
 from re import search,findall
 from json import loads
 from pandas import DataFrame
+from requests.packages.urllib3 import disable_warnings
+disable_warnings()
 
 class crawler104:
     def __init__(self):
@@ -36,20 +38,20 @@ class crawler104:
                 "page": 1,
                 "mode": "s",
                 "jobsource": "2018indexpoc"}
-        res1 = res.get("https://www.104.com.tw/jobs/search",params = params,headers = self.headers_info)
+        res1 = res.get("https://www.104.com.tw/jobs/search",params = params,headers = self.headers_info,verify = False)
         soup = BeautifulSoup(res1.text,'html.parser')
         totalPage=int(search( r'\"{}\":(\d*)'.format("totalPage"), soup.text).group(1))
         result = []
         for page in range(1,totalPage+1):
             params['page']=page
-            res1=res.get("https://www.104.com.tw/jobs/search",params = params,headers = self.headers_info)
+            res1=res.get("https://www.104.com.tw/jobs/search",params = params,headers = self.headers_info,verify = False)
             soup = BeautifulSoup(res1.text,'html.parser')
             
             soup = soup.find_all("a",class_="js-job-link")
             for s in soup:
                 jobid = s['href'].split('?')[0].split('/')[-1]
                 print('https://www.104.com.tw/job/'+jobid)
-                res2 = res.get('https://www.104.com.tw/job/ajax/content/'+jobid,headers = self.headers_info)
+                res2 = res.get('https://www.104.com.tw/job/ajax/content/'+jobid,headers = self.headers_info,verify = False)
                 data = loads(res2.text)['data']
                 try:
                     if keyword in data['header']['custName']:
