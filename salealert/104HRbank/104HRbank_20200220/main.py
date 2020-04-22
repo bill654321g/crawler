@@ -7,6 +7,6 @@ if __name__ == "__main__":
     bank104 = crawler104()
     bank104.start_crawl("富邦人壽")
     bank104.resultdf = pretreat(bank104.resultdf)
-    bank104.resultdf.to_excel('./result/result'+str(date.today())+'.xlsx',index=False)
+    bank104.resultdf.to_excel('./result/HB_104_'+str(date.today())+'.xlsx',index=False)
     print("time:"+str(time()-start))
     input('Press enter to exit')

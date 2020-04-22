@@ -126,15 +126,32 @@ def pretreat(df):
             ss.append(rstring)
         return ''.join(ss)
     def work_content(s):
-        if strQ2B(s).replace(' ','').replace('行','行') in ['展業員NCT(正職)','行銷專員CA(正職)','行銷專員PMS(正職)','【業務通路】行銷專員CA(正職)']:
+        if strQ2B(s).replace(' ','').replace('行','行') in ['展業員NCT(正職)','行銷專員CA(正職)','行銷專員PMS(正職)','【業務通路】行銷專員CA(正職)','行銷專員(正職)','(正職)行銷專員CA','行銷專員(正職）','行銷專員CA','展業員「全職」','行銷專員CA(正職)(需求人數:不拘)','行銷專員CA(正職','展業員','行銷專員(正職)','【業務通路】行銷專員CA','行銷專員CA','行銷專員CA正職','行銷專員','展業員NCT','行銷專員-正職','行銷專員CA-正職','展業員NCT正職','行銷專員(CA)','展業員NCT正職']:
             return True
         else:
             return False
-
+#        for e in ["保險業務員","壽險顧問","保險儲備主管","理財"]:
+#            if e in s:
+#                return False
+#            else:
+#                return True
+ 
+#    def work_time(s):
+#        pattern="\d+:\d+"
+#        r=re.findall(pattern, s, flags=0)
+#        if len(r) == 2:
+#            if (int(r[1].replace(":",""))-int(r[0].replace(":","")))<800:
+#                return False
+#            else:
+#                return True
+#        else:
+#            return True
+#       
     def work_salary(s):
         return s == '時薪158元'
  
     def work_com_num(s):
+        s=s.replace('淮','准')
         if '核准文號' in s:
             s=s[s.find('核准文號'):]
             patern="[\dA-Z]+"
@@ -154,6 +171,8 @@ def pretreat(df):
             return True
         else:
             return False
+ 
+ 
    
     df["是否違規"] = ~(df["工作名稱"].apply(work_content)&
                        df['薪資'].apply(work_salary)&
@@ -178,6 +197,7 @@ def pretreat(df):
     t=str(df.shape[0])
     df = df[df['是否違規']]
     print('total:'+t+' error:'+str(df.shape[0]))
+#    df = df[df['公司'].apply(lambda x: '總公司' not in x)]
     return df
 
     

@@ -80,6 +80,7 @@ class crawler104:
                      row[1]['jobDetail']['jobType'],
                      row[1]['contact']['hrName']
                     ]
+                    
             r = dict(zip(colname,value))
             data.append(r)
         df = DataFrame(data)
@@ -103,7 +104,7 @@ def pretreat(df):
             ss.append(rstring)
         return ''.join(ss)
     def work_content(s):
-        if strQ2B(s).replace(' ','').replace('行','行') in ['展業員NCT(正職)','行銷專員CA(正職)','行銷專員PMS(正職)','【業務通路】行銷專員CA(正職)']:
+        if strQ2B(s).replace(' ','').replace('行','行') in ['展業員NCT(正職)','行銷專員CA(正職)','行銷專員PMS(正職)','【業務通路】行銷專員CA(正職)','行銷專員(正職)','(正職)行銷專員CA','行銷專員(正職）','行銷專員CA','展業員「全職」','行銷專員CA(正職)(需求人數:不拘)','行銷專員CA(正職','展業員','行銷專員(正職)','【業務通路】行銷專員CA','行銷專員CA','行銷專員CA正職','行銷專員','展業員NCT','行銷專員-正職','行銷專員CA-正職','展業員NCT正職','行銷專員(CA)','展業員NCT正職']:
             return True
         else:
             return False
@@ -128,6 +129,7 @@ def pretreat(df):
         return s == '時薪158元'
  
     def work_com_num(s):
+        s=s.replace('淮','准')
         if '核准文號' in s:
             s=s[s.find('核准文號'):]
             patern="[\dA-Z]+"
@@ -143,7 +145,7 @@ def pretreat(df):
             return True
  
     def work_part_time(s):
-        if s =='正職':
+        if s =='正職' or s =='全職':
             return True
         else:
             return False
