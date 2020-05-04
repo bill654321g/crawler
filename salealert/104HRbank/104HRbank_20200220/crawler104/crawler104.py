@@ -173,8 +173,8 @@ def pretreat(df):
     df.loc[:,'違規原因'] = df['違規原因'].apply(rmtmp)
     df = df[df['公司'].apply(lambda x: '總公司' not in x)]
     t=str(df.shape[0])
-    df = df[df['是否違規']]
-    print('total:'+t+' error:'+str(df.shape[0]))
+    #df = df[df['是否違規']]
+    print('total:'+t)
 #    df = df[df['公司'].apply(lambda x: '總公司' not in x)]
     return df
 

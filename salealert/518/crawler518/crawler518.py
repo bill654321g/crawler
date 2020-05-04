@@ -53,13 +53,12 @@ class crawler518:
                 sub_title = []
                 sub_content = []
                 for i in soup_ul:
-                    tt = i.find_all('dt')
-                    rr = i.find_all('dd')
-                    if tt!=[] and rr!=[]:
+                    tt = i.find_all('li')
+                    if tt!=[]:
                         for j in range(len(tt)):
-                            if '：' in tt[j].text:
-                                sub_title.append(tt[j].text.replace('：','').replace(' ','').replace('\u3000',''))
-                                sub_content.append(rr[j].text.replace(' ','').split('\n')[0].replace('地圖',''))
+                            if tt[j].find_all('span')!=[]:
+                                sub_title.append(tt[j].text.split(" ")[0].replace('：','').replace(' ','').replace('\u3000',''))
+                                sub_content.append(tt[j].find_all('span')[0].text.replace(' ','').split('\n')[0].replace('地圖',''))
             return dict(zip(sub_title,sub_content))
 
         colname = ['web','url','工作名稱','薪資','上班地點','上班時段','公司','工作性質','聯絡人']
@@ -67,15 +66,15 @@ class crawler518:
         for row in self.result:
             content = getcontent(row[1])
             value = ['518',
-                     row[0],
-                     row[1].strong.text,
-                     content['薪資待遇'],
-                     content['上班地點'],
-                     content['上班時段'],
-                     row[1].find_all(class_="company-info")[0].a['title'],
-                     content['工作性質'],
-                     content['職務聯絡人'],
-                    ]
+                             row[0],
+                             row[1].title.text.split('-')[0],
+                             content['薪資待遇'],
+                             content['上班地點'],
+                             content['上班時段'],
+                             row[1].find_all(class_="company-info")[0].a['title'],
+                             content['工作性質'],
+                             content['職務聯絡人'],
+                        ]
             r = dict(zip(colname,value))
             data.append(r)
         df = pd.DataFrame(data)
@@ -169,7 +168,7 @@ def pretreat(df):
     df.loc[:,'違規原因'] = df['違規原因'].apply(rmtmp)
     df = df[df['公司'].apply(lambda x: '總公司' not in x)]
     t=str(df.shape[0])
-    df = df[df['是否違規']]
+    #df = df[df['是否違規']]
     print('total:'+t+' error:'+str(df.shape[0]))
 #    df = df[df['公司'].apply(lambda x: '總公司' not in x)]
     return df    
