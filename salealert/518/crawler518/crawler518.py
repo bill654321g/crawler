@@ -17,7 +17,7 @@ class crawler518:
            "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
            'Connection':'close'}
 
-        res1 = res.get("https://www.518.com.tw/job-index.html",params = params,headers = headers)
+        res1 = res.get("https://www.518.com.tw/job-index.html",params = params,headers = headers,verify = False)
         soup = BeautifulSoup(res1.text,'html.parser')
         totalPage=int(findall('\d+',soup.find_all(class_="pagecountnum")[0].text)[1])
         url_list = []
@@ -29,13 +29,13 @@ class crawler518:
             params['ai']=0
             params = {"ad" : keyword,'i':1,'am':1,'ai':0}
             for page in range(2,totalPage+1):
-                res2 = res.get("https://www.518.com.tw/job-index-P-"+str(page)+".html",params = params,headers = headers)
+                res2 = res.get("https://www.518.com.tw/job-index-P-"+str(page)+".html",params = params,headers = headers,verify = False)
                 soup1 = BeautifulSoup(res2.text,'html.parser')
                 for s in soup1.find_all(class_="title"):
                     url_list.append(s.a['href'])
         result=[]
         for url in url_list:
-            res2 = res.get(url,headers = headers)
+            res2 = res.get(url,headers = headers,verify = False)
             soup2 = BeautifulSoup(res2.text,'html.parser')
             print(url)
             result.append([url,soup2])
