@@ -148,7 +148,7 @@ def pretreat(df):
 #            return True
 #       
     def work_salary(s):
-        return s == '時薪158元'
+        return s in ['時薪158元' , '時薪158元以上']
  
     def work_com_num(s):
         s=s.replace('淮','准')
